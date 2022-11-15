@@ -46,5 +46,7 @@ EER values for the proposed model and the baseline models provided by ASVSpoof20
 | LCNN - LFCC feature     |  5.06 |        
 
 
+# In progress
 
+CQCC is another promising audio feature computed by Constant Q transform which outlines the background structure of the audio files as an alternative tyo Fourier transform. Currently, I am working on CQCC feature along with spectral features such as mean and std of frequency, skew and spectral entropy. Spectral features are statistical analysis of the audio samples thus outlining the backbone structure of the audio.
 
