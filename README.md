@@ -24,8 +24,10 @@ The Logical Access (LA) category has been used for this project. Development set
 
 ### Training
 To train the model run:
+
     python main.py 
-    
+   
+   
 ** (you need to change the database_path and protocols_path inside the code to the ASVSpoof2019 directory)**
 
 
