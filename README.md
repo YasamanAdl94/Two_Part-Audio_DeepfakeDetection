@@ -17,7 +17,8 @@ This repository contains the implementation for two-part architecture using fund
     
    
 ### Dataset
-ASVSpoof2019 dataset has been used in this project. The dataset is available at https://datashare.ed.ac.uk/handle/10283/3336
+ASVSpoof2019 dataset has been used in this project. The dataset is available at:
+     https://datashare.ed.ac.uk/handle/10283/3336
 
 The Logical Access (LA) category has been used for this project. Development set is used for validation and evaluation set is used for testing purposes.
 
