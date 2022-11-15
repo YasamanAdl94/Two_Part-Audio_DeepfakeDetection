@@ -168,7 +168,7 @@ class CONV(nn.Module):
         self.kernel_size = kernel_size
         self.sample_rate=sample_rate
 
-        # Forcing the filters to be odd (i.e, perfectly symmetrics)
+        # Forcing the filters to be odd
         if kernel_size%2==0:
             self.kernel_size=self.kernel_size+1
 
@@ -210,7 +210,7 @@ class CONV(nn.Module):
         
         band_pass_filter=self.band_pass.to(self.device)
 
-        # Frequency masking: We randomly mask (1/5)th of no. of sinc filters channels (70)
+        # Frequency masking: randomly mask (1/5)th of number of sinc filters channels (70)
         if (mask==True):
             for i1 in range(1):
                 A=np.random.uniform(0,14) 
@@ -312,9 +312,7 @@ class RawGAT_ST(nn.Module):
         self.first_bn = nn.BatchNorm2d(num_features = 1)
         
         self.selu = nn.SELU(inplace=True)
-        
-        # Note that here you can also use only one encoder to reduce the network parameters which is jsut half of the 0.44M (mentioned in the paper). I was doing some subband analysis and forget to remove the use of two encoders.  I also checked with one encoder and found same results. 
-        
+                
         self.encoder1=nn.Sequential(
                         nn.Sequential(Residual_block(nb_filts = d_args['filts'][1], first = True)),
                         nn.Sequential(Residual_block(nb_filts = d_args['filts'][1])),
@@ -368,9 +366,6 @@ class RawGAT_ST(nn.Module):
         else:
             x=self.conv_time(x,mask=False)
         
-        """
-        Different with the our RawNet2 model, we interpret the output of sinc-convolution layer as 2-dimensional image with one channel (like 2-D representation).
-        """
         x = x.unsqueeze(dim=1)  # 2-D (#bs,1,sinc-filt(70),64472)
         
         x = F.max_pool2d(torch.abs(x), (3,3))  #[#bs, C(1),F(23),T(21490)]
