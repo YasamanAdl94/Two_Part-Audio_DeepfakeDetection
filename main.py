@@ -9,7 +9,9 @@ from torchvision import transforms
 import yaml
 import torch
 from torch import nn
-from model import RawGAT_ST   
+import librosa
+import soundfile as sf
+from model import RawGAT_ST
 from tensorboardX import SummaryWriter
 from core_scripts.startup_config import set_random_seed
 
@@ -25,6 +27,7 @@ def pad(x, max_len=64600):
 
 
 def evaluate_accuracy(data_loader, model, device):
+    num_correct = 0.0
     val_loss = 0.0
     num_total = 0.0
     model.eval()
@@ -52,7 +55,7 @@ def evaluate_accuracy(data_loader, model, device):
 
 
 def produce_evaluation_file(dataset, model, device, save_path):
-    data_loader = DataLoader(dataset, batch_size=8, shuffle=False)
+    data_loader = DataLoader(dataset, batch_size=2, shuffle=False)
     num_correct = 0.0
     num_total = 0.0
     model.eval()
@@ -111,7 +114,6 @@ def train_epoch(data_loader, model, lr,optimizer, device):
        
         batch_y = batch_y.view(-1).type(torch.int64).to(device)
         
-        
         batch_out = model(batch_x,Freq_aug=True)
         
         batch_loss = criterion(batch_out, batch_y)
@@ -123,17 +125,17 @@ def train_epoch(data_loader, model, lr,optimizer, device):
         optimizer.step()
        
     running_loss /= num_total
-    
     return running_loss
+
 
 
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('ASVSpoof2019 RawGAT-ST model')
-    
+
     # Dataset
-    parser.add_argument('--database_path', type=str, default='/your/path/to/data/ASVspoof_database/', help='main ASVSpoof2019 dataset folder')
+    parser.add_argument('--database_path', type=str, default="E:/LA/", help='Change this to user\'s full directory address of LA database (ASVspoof2019- for training, development and evaluation scores). We assume that all three ASVspoof 2019 LA train, LA dev and  LA eval data folders are in the same database_path directory.')
     '''
     % database_path (full LA directory address)/
     %      |- ASVspoof2019_LA_eval/flac
@@ -141,7 +143,7 @@ if __name__ == '__main__':
     %      |- ASVspoof2019_LA_dev/flac
     '''
 
-    parser.add_argument('--protocols_path', type=str, default='/your/path/to/protocols/ASVspoof_database/', help='main ASVSpoof2019 dataset protocols folder')
+    parser.add_argument('--protocols_path', type=str, default="E:/LA/ASVspoof2019_LA_cm_protocols/", help='Change with path to user\'s LA database protocols directory address')
     '''
     % protocols_path/
     %      |- ASVspoof2019.LA.cm.eval.trl.txt
@@ -150,9 +152,8 @@ if __name__ == '__main__':
     '''
 
     # Hyperparameters
-    # These are the default values for hyperparameters due to hardware specifications on my end. However, if desired, they can be adjusted on command line
-    parser.add_argument('--batch_size', type=int, default=5)
-    parser.add_argument('--num_epochs', type=int, default=100)
+    parser.add_argument('--batch_size', type=int, default=3)
+    parser.add_argument('--num_epochs', type=int, default=50)
     parser.add_argument('--lr', type=float, default=0.001)
     parser.add_argument('--weight_decay', type=float, default=0.001)
     parser.add_argument('--loss', type=str, default='WCE',help='Weighted Cross Entropy Loss ')
@@ -163,6 +164,8 @@ if __name__ == '__main__':
     
     parser.add_argument('--model_path', type=str,
                         default=None, help='Model checkpoint')
+    parser.add_argument("--output_path", type=str,
+                        default='E:\Data' ,help='path to output file')
     parser.add_argument('--comment', type=str, default=None,
                         help='Comment to describe the saved model')
     # Auxiliary arguments
@@ -222,17 +225,20 @@ if __name__ == '__main__':
 
 
     #GPU device
-    # In order to use CUDA, double check that cuda is installed along with proper torch, torchvision and torchaudio versions.
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'                  
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print('Device: {}'.format(device))
 
     # validation Dataloader
-    dev_set = data_utils.ASVDataset(database_path=args.database_path,protocols_path=args.protocols_path,is_train=False, is_logical=is_logical,
+    database_path = "E:/LA/"
+    protocols_path = "E:/LA/ASVspoof2019_LA_cm_protocols/"
+    feature_vector= ['fundamental_freq', 'dominant_freq']
+    feature = feature_vector
+    dev_set = data_utils.ASVDataset(database_path=database_path,protocols_path=protocols_path,is_train=False, is_logical=is_logical,
                                     transform=transforms,
-                                    feature_name=args.features, is_eval=args.is_eval, eval_part=args.eval_part)
+                                    feature=feature_vector, is_eval=args.is_eval, eval_part=args.eval_part)
     dev_loader = DataLoader(dev_set, batch_size=args.batch_size, shuffle=True)
-    
-    
+
+
     #model 
     model = RawGAT_ST(parser1['model'], device)
     nb_params = sum([param.view(-1).size()[0] for param in model.parameters()])
@@ -255,9 +261,10 @@ if __name__ == '__main__':
         sys.exit(0)
 
     # Training Dataloader
-    # During evaluation, is_train should be set as False so the code won't load the cached train dataset
-    train_set = data_utils.ASVDataset(database_path=args.database_path,protocols_path=args.protocols_path,is_train=True, is_logical=is_logical, transform=transforms,
-                                      feature_name=args.features)
+    database_path = "E:/LA/"
+    protocols_path = "E:/LA/ASVspoof2019_LA_cm_protocols"
+    train_set = data_utils.ASVDataset(database_path=database_path,protocols_path=protocols_path,is_train=False, is_logical=is_logical, transform=transforms,
+                                      feature=feature_vector)
     train_loader = DataLoader(
         train_set, batch_size=args.batch_size, shuffle=True)
 
@@ -270,7 +277,8 @@ if __name__ == '__main__':
         val_loss = evaluate_accuracy(dev_loader, model, device)
         writer.add_scalar('val_loss', val_loss, epoch)
         writer.add_scalar('loss', running_loss, epoch)
-        print('\n{} - {} - {} '.format(epoch,
+        print("epoch, running loss, val_loss:", '\n{} - {} - {} '.format(epoch,
                                                    running_loss,val_loss))
         torch.save(model.state_dict(), os.path.join(
             model_save_path, 'epoch_{}.pth'.format(epoch)))
+    writer.close()
