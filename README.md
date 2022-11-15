@@ -15,10 +15,10 @@ $ pip install -r requirements.txt
     Librosa: ISC License
     Soundfile: BSD License (BSD 3-Clause License)
     
-    
-
+   
 ### Dataset
 ASVSpoof2019 dataset has been used in this project. The dataset is available at https://datashare.ed.ac.uk/handle/10283/3336
+
 The Logical Access (LA) category has been used for this project. Development set is used for validation and evaluation set is used for testing purposes.
 
 ### Training
@@ -37,11 +37,11 @@ python main.py --is_eval --eval --model_path='/path/to/your/best_model.pth' --ev
 
 EER values for the proposed model and the baseline models provided by ASVSpoof2019 organizers https://arxiv.org/pdf/2102.05889.pdf
 
-| Model                   | EER value       |   
-| --------------------------- |:-------------:| -------------------------:|
-| Proposed Model - Fundamental Frequency         |     In progress | 
-| GMM - LFCC features                 |  3.50 |    
-| LCNN - LFCC feature           |  5.06 |        
+| Model                   | EER value    |   
+| ------------------------|:-------------|
+| Proposed Model - Fundamental Frequency | 2 |     
+| GMM - LFCC features     |  3.50 |    
+| LCNN - LFCC feature     |  5.06 |        
 
 
 
