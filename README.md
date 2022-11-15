@@ -24,8 +24,10 @@ The Logical Access (LA) category has been used for this project. Development set
 
 ### Training
 To train the model run:
-
     python main.py 
+    
+** (you need to change the database_path and protocols_path inside the code to the ASVSpoof2019 directory)**
+
 
 (Other values such as epoch numbers, batch_size, learning rate and etc. are set as default but can be changed if given in the command line e.g. --num_epochs=200)
 
