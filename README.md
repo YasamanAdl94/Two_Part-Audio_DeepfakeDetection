@@ -41,7 +41,7 @@ EER values for the proposed model and the baseline models provided by ASVSpoof20
 
 | Model                   | EER value    |   
 | ------------------------|:-------------|
-| Proposed Model - Fundamental Frequency | 3.87|     
+| Proposed Model - Fundamental Frequency | 3.82|     
 | GMM - LFCC features     |  3.50 |    
 | LCNN - LFCC feature     |  5.06 |        
 
