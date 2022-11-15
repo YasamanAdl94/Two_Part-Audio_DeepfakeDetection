@@ -9,7 +9,7 @@ from torchvision import transforms
 import yaml
 import torch
 from torch import nn
-from model import RawGAT_ST  # In main model script we used our best RawGAT-ST-mul model. To use other models you need to call revelant model scripts from RawGAT_models folder
+from model import RawGAT_ST   
 from tensorboardX import SummaryWriter
 from core_scripts.startup_config import set_random_seed
 
