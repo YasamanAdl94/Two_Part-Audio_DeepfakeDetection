@@ -19,7 +19,7 @@ elif 'Eval'==args[1]:
 
 
 # Replace CM scores with your own scores or provide score file as the first argument.
-cm_scores_file = "C:/Users/yahmadia/PycharmProjects/pythonProject/tDCF_python/Scores.txt"
+cm_scores_file = "C:/Users/yahmadia/PycharmProjects/pythonProject/tDCF_python/eval_scores.txt"
 # Replace ASV scores with organizers' scores or provide score file as the second argument.
 asv_score_file =  ASV_SCOREFILE
 
