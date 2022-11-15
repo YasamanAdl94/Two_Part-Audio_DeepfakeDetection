@@ -13,6 +13,7 @@ This repository contains the implementation for two-part architecture using fund
 
     Librosa: ISC License
     Soundfile: BSD License (BSD 3-Clause License)
+    Spafe: BSD License (BSD)
     
    
 ### Dataset
