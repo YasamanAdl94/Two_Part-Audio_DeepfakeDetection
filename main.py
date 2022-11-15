@@ -133,7 +133,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser('ASVSpoof2019 RawGAT-ST model')
     
     # Dataset
-    parser.add_argument('--database_path', type=str, default='/your/path/to/data/ASVspoof_database/', help='Change this to user\'s full directory address of LA database (ASVspoof2019- for training, development and evaluation scores). We assume that all three ASVspoof 2019 LA train, LA dev and  LA eval data folders are in the same database_path directory.')
+    parser.add_argument('--database_path', type=str, default='/your/path/to/data/ASVspoof_database/', help='main ASVSpoof2019 dataset folder')
     '''
     % database_path (full LA directory address)/
     %      |- ASVspoof2019_LA_eval/flac
@@ -141,7 +141,7 @@ if __name__ == '__main__':
     %      |- ASVspoof2019_LA_dev/flac
     '''
 
-    parser.add_argument('--protocols_path', type=str, default='/your/path/to/protocols/ASVspoof_database/', help='Change with path to user\'s LA database protocols directory address')
+    parser.add_argument('--protocols_path', type=str, default='/your/path/to/protocols/ASVspoof_database/', help='main ASVSpoof2019 dataset protocols folder')
     '''
     % protocols_path/
     %      |- ASVspoof2019.LA.cm.eval.trl.txt
@@ -150,10 +150,11 @@ if __name__ == '__main__':
     '''
 
     # Hyperparameters
-    parser.add_argument('--batch_size', type=int, default=10)
-    parser.add_argument('--num_epochs', type=int, default=300)
-    parser.add_argument('--lr', type=float, default=0.0001)
-    parser.add_argument('--weight_decay', type=float, default=0.0001)
+    # These are the default values for hyperparameters due to hardware specifications on my end. However, if desired, they can be adjusted on command line
+    parser.add_argument('--batch_size', type=int, default=5)
+    parser.add_argument('--num_epochs', type=int, default=100)
+    parser.add_argument('--lr', type=float, default=0.001)
+    parser.add_argument('--weight_decay', type=float, default=0.001)
     parser.add_argument('--loss', type=str, default='WCE',help='Weighted Cross Entropy Loss ')
 
     # model
@@ -221,6 +222,7 @@ if __name__ == '__main__':
 
 
     #GPU device
+    # In order to use CUDA, double check that cuda is installed along with proper torch, torchvision and torchaudio versions.
     device = 'cuda' if torch.cuda.is_available() else 'cpu'                  
     print('Device: {}'.format(device))
 
@@ -253,6 +255,7 @@ if __name__ == '__main__':
         sys.exit(0)
 
     # Training Dataloader
+    # During evaluation, is_train should be set as False so the code won't load the cached train dataset
     train_set = data_utils.ASVDataset(database_path=args.database_path,protocols_path=args.protocols_path,is_train=True, is_logical=is_logical, transform=transforms,
                                       feature_name=args.features)
     train_loader = DataLoader(
