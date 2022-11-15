@@ -4,9 +4,39 @@ import os
 import soundfile as sf
 from torch.utils.data import DataLoader, Dataset
 import numpy as np
+from torch import Tensor
 from joblib import Parallel, delayed
+import os
+import soundfile as sf
+import scipy
+import numpy as np
+import torch
+import pickle
+import scipy.io.wavfile
+from spafe.spafe.features.spfeats import extract_feats
+from spafe.spafe.frequencies.fundamental_frequencies import compute_yin
+from spafe.spafe.frequencies.dominant_frequencies import get_dominant_frequencies
+from CQCC.cqcc import cqcc
+import pickle
+from librosa.util import find_files
+import scipy.io as sio
 
 
+def extract_cqcc(padded_x, fs, ZsdD):
+    # INPUT SIGNAL
+    padded_x = padded_x.reshape(padded_x.shape[0], 1)  # for one-channel signal
+
+    # PARAMETERS
+    B = 96
+    fmax = fs / 2
+    fmin = fmax / 2 ** 9
+    d = 16
+    cf = 19
+
+    # COMPUTE CQCC FEATURES
+    CQcc, LogP_absCQT, TimeVec, FreqVec, Ures_LogP_absCQT, Ures_FreqVec, absCQT = cqcc(padded_x, fs, B, fmax, fmin, d,
+                                                                                       cf, ZsdD)
+    return CQcc, fmax, fmin
 ASVFile = collections.namedtuple('ASVFile',
     ['speaker_id', 'file_name', 'path', 'sys_id', 'key'])
 
@@ -14,13 +44,14 @@ class ASVDataset(Dataset):
     """ Utility class to load  train/dev/Eval datatsets """
     def __init__(self, database_path=None,protocols_path=None,transform=None, 
         is_train=True, sample_size=None, 
-        is_logical=True, feature_name=None, is_eval=False,
+        is_logical=True, feature=None, is_eval=False,
         eval_part=0):
 
         track = 'LA'   
         data_root=protocols_path      
-        assert feature_name is not None, 'must provide feature name'
+        #assert feature_name is not None, 'must provide feature name'
         self.track = track
+        self.feature = feature
         self.is_logical = is_logical
         self.prefix = 'ASVspoof2019_{}'.format(track)
         
@@ -78,7 +109,7 @@ class ASVDataset(Dataset):
         
         self.protocols_dir = os.path.join(self.data_root)
         print('protocols_dir',self.protocols_dir)
-        
+
         self.files_dir = os.path.join(self.data_root_dir, '{}_{}'.format(
             self.prefix, self.dset_name ), 'flac')
         print('files_dir',self.files_dir)
@@ -87,7 +118,7 @@ class ASVDataset(Dataset):
             'ASVspoof2019.{}.cm.{}.txt'.format(track, self.protocols_fname))
         print('protocols_file',self.protocols_fname)
 
-        self.cache_fname = 'cache_{}_{}_{}.npy'.format(self.dset_name,track,feature_name)
+        self.cache_fname = 'cache_{}_{}_{}.npy'.format(self.dset_name,track,feature)
         print('cache_fname',self.cache_fname)
         
         
@@ -100,9 +131,59 @@ class ASVDataset(Dataset):
             self.files_meta = self.parse_protocols_file(self.protocols_fname)
             data = list(map(self.read_file, self.files_meta))
             self.data_x, self.data_y, self.data_sysid = map(list, zip(*data))
-            
             if self.transform:
                 self.data_x = Parallel(n_jobs=4, prefer='threads')(delayed(self.transform)(x) for x in self.data_x)
+
+            if self.feature == 'fundamental_freq':
+                idx = 0
+                for x in self.data_x:
+                    sig = x.numpy()
+                    harmonic_threshold = 0.85
+                    pitches, harmonic_rates, argmins, times = compute_yin(
+                        sig,
+                        rate = 16000,
+                        win_len=0.030,
+                        win_hop=0.015,
+                        low_freq=50,
+                        high_freq=500,
+                        harmonic_threshold=harmonic_threshold,
+                    )
+                    self.data_x[idx] = Tensor([pitches, harmonic_rates, argmins, times])
+                    idx = idx + 1
+
+            if self.feature == 'dominant_freq':
+                idx = 0
+                for x in self.data_x:
+                    sig = x.numpy()
+                    dom_freqs = get_dominant_frequencies(
+                        sig=sig,
+                        fs=16000,
+                        butter_filter=False,
+                        lower_cutoff=50,
+                        upper_cutoff=3000,
+                        nfft=512,
+                        win_len=0.025,
+                        win_hop=0.01,
+                        win_type="hamming",
+                    )
+                    self.data_x[idx] = Tensor(dom_freqs)
+                    idx = idx + 1
+            if self.feature == 'spectral':
+                idx = 0
+                for x in self.data_x:
+                    sig = x.numpy()
+                    specs = extract_feats(sig=sig, fs=16000)
+                    self.data_x[idx]= Tensor(specs)
+                    idx = idx + 1
+            if self.feature == 'cqcc':
+                idx = 0
+                sr = 16000
+                ZsdD = "Zs"
+                for x in self.data_x:
+                    feat_cqcc, fmax, fmin = extract_cqcc(x, sr, ZsdD)
+                    self.data_x[idx] = Tensor(feat_cqcc.T) #(20,352)
+                    idx = idx +1
+
             torch.save((self.data_x, self.data_y, self.data_sysid, self.files_meta), self.cache_fname)
             
         if sample_size:
@@ -148,3 +229,6 @@ class ASVDataset(Dataset):
         lines = open(protocols_fname).readlines()
         files_meta = map(self._parse_line, lines)
         return list(files_meta)
+
+
+
