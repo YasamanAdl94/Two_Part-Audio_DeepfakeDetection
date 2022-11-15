@@ -1,7 +1,7 @@
 # Two_Part-Audio_DeepfakeDetection - Version2
 
 This repository contains the implementation for two-part architecture using fundamental frequency, dominant frequency and spectral features.
-
+![image](https://user-images.githubusercontent.com/61777099/194679033-9c61bc9f-9bc6-415e-be1e-579ac4109d8c.png)
 
 
 ## Instructions
