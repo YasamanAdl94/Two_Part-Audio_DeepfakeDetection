@@ -42,11 +42,11 @@ Other hyperpramater values such as epoch numbers, batch_size, learning rate and 
 EER values for the proposed model and the baseline models provided by ASVSpoof2019 organizers:
     https://arxiv.org/pdf/2102.05889.pdf
 
-| Model                   | EER value    |   
-| ------------------------|:-------------|
-| Proposed Model - Fundamental Frequency | 3.82|     
-| GMM - LFCC features     |  3.50 |    
-| LCNN - LFCC feature     |  5.06 |        
+| Model                   | EER value    | tDFC    |   
+| ------------------------|:-------------|:-------------|
+| Proposed Model - Fundamental Frequency | 3.82| 0.12318    
+| GMM - LFCC features     |  3.50 |    0.0904|
+| LCNN - LFCC feature     |  5.06 |        0.1000|
 
 
 # In progress
