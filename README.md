@@ -28,12 +28,11 @@ To train the model run:
     python main.py 
    
    
-**you need to change the database_path and protocols_path inside the code to the ASVSpoof2019 directory**
+**you need to change the default database_path and protocols_path inside the code to the ASVSpoof2019 directory or include it as command line arguments (--database_path/--protocols_path)**
 
 
 (Other values such as epoch numbers, batch_size, learning rate and etc. are set as default but can be changed if given in the command line e.g. --num_epochs=200)
 
-Note: The dataset path and protocols_path should be changed to the corresponding folder. The default value can be set inside the code or given as command line arguments (--database_path/--protocols_path)
 
 ### Testing
 
