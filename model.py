@@ -326,16 +326,6 @@ class RawGAT_ST(nn.Module):
         )
 
 
-        self.encoder2=nn.Sequential(
-                        nn.Sequential(Residual_block(nb_filts = d_args['filts'][1], first = True)),
-                        nn.Sequential(Residual_block(nb_filts = d_args['filts'][1])),
-                        nn.Sequential(Residual_block(nb_filts = d_args['filts'][2])),
-                        
-                        nn.Sequential(Residual_block(nb_filts = d_args['filts'][3])),
-                        nn.Sequential(Residual_block(nb_filts = d_args['filts'][3])),
-                        nn.Sequential(Residual_block(nb_filts = d_args['filts'][3]))
-        )
-
         # Graph attention and pooling layer for Spectral-RawGAT
         self.GAT_layer1=GraphAttentionLayer(d_args['filts'][-1][-1],32)
         self.pool1=Pool(0.64, 32, 0.3)
@@ -392,7 +382,7 @@ class RawGAT_ST(nn.Module):
         # encoder structure for spectral GAT
         e1=self.encoder1(x)            # [#bs, C(64), F(23), T(29)]
         
-        # max-pooling along time with absolute value  (Attention in spectral part)
+        # max-pooling along with time with absolute value  (Attention in spectral part)
         x_max,_=torch.max(torch.abs(e1),dim=3)  #[#bs, C(64), F(23)]
         
         x_gat1=self.GAT_layer1(x_max.transpose(1,2))  #(#bs,#node(F),feat_dim(C)) --> [#bs, 23, 32]
@@ -404,7 +394,7 @@ class RawGAT_ST(nn.Module):
 
 
         # encoder structure for temporal GAT
-        e2=self.encoder2(x)   #[#bs, C(64), F(23), T(29)]
+        e2=self.encoder1(x)   #[#bs, C(64), F(23), T(29)]
         
         x_max2,_=torch.max(torch.abs(e2),dim=2) # max along frequency  #[#bs, C(64), T(29)]
         
