@@ -1,14 +1,13 @@
-# Two_Part-Audio_DeepfakeDetection
+# Two_Part-Audio_DeepfakeDetection - Version2
 
 This repository contains the implementation for two-part architecture using fundamental frequency, dominant frequency and spectral features.
-![image](https://user-images.githubusercontent.com/61777099/194679033-9c61bc9f-9bc6-415e-be1e-579ac4109d8c.png)
+
 
 
 ## Instructions
 
-$ conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia
-
-$ pip install -r requirements.txt
+    $ conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia
+    $ pip install -r requirements.txt
 
 ## Libraries used and their licenses
 
@@ -24,7 +23,7 @@ The Logical Access (LA) category has been used for this project. Development set
 ### Training
 To train the model run:
 
-python main.py 
+    python main.py 
 
 (Other values such as epoch numbers, batch_size, learning rate and etc. are set as default but can be changed if given in the command line e.g. --num_epochs=200)
 
@@ -32,7 +31,7 @@ Note: The dataset path and protocols_path should be changed to the corresponding
 
 ### Testing
 
-python main.py --is_eval --eval --model_path='/path/to/your/best_model.pth' --eval_output='eval_CM_scores_file.txt'
+    python main.py --is_eval --eval --model_path='/path/to/your/best_model.pth' --eval_output='eval_CM_scores_file.txt'
 
 
 EER values for the proposed model and the baseline models provided by ASVSpoof2019 organizers https://arxiv.org/pdf/2102.05889.pdf
