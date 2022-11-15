@@ -135,15 +135,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser('ASVSpoof2019 RawGAT-ST model')
 
     # Dataset
-    parser.add_argument('--database_path', type=str, default="E:/LA/", help='Change this to user\'s full directory address of LA database (ASVspoof2019- for training, development and evaluation scores). We assume that all three ASVspoof 2019 LA train, LA dev and  LA eval data folders are in the same database_path directory.')
-    '''
+    parser.add_argument('--database_path', type=str, default="E:/LA/", help='main directory of ASVSpoof2019')
     % database_path (full LA directory address)/
     %      |- ASVspoof2019_LA_eval/flac
     %      |- ASVspoof2019_LA_train/flac
     %      |- ASVspoof2019_LA_dev/flac
     '''
 
-    parser.add_argument('--protocols_path', type=str, default="E:/LA/ASVspoof2019_LA_cm_protocols/", help='Change with path to user\'s LA database protocols directory address')
+    parser.add_argument('--protocols_path', type=str, default="E:/LA/ASVspoof2019_LA_cm_protocols/", help=' main directory of ASVSpoof2019 protocols')
     '''
     % protocols_path/
     %      |- ASVspoof2019.LA.cm.eval.trl.txt
@@ -261,9 +260,10 @@ if __name__ == '__main__':
         sys.exit(0)
 
     # Training Dataloader
+    # While testing, is_train is set to False
     database_path = "E:/LA/"
     protocols_path = "E:/LA/ASVspoof2019_LA_cm_protocols"
-    train_set = data_utils.ASVDataset(database_path=database_path,protocols_path=protocols_path,is_train=False, is_logical=is_logical, transform=transforms,
+    train_set = data_utils.ASVDataset(database_path=database_path,protocols_path=protocols_path,is_train=True, is_logical=is_logical, transform=transforms,
                                       feature=feature_vector)
     train_loader = DataLoader(
         train_set, batch_size=args.batch_size, shuffle=True)
