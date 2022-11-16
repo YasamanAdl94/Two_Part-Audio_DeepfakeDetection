@@ -40,7 +40,7 @@ Other hyperpramater values such as epoch numbers, batch_size, learning rate and 
 
 ### Computing EER value
 
-    python tDCF_python/evaluate_tDCF_asvspoof2019_eval_LA.py Eval 'eval_scores_file.txt'
+    python tDCF_python/evaluate_tDCF_asvspoof19_eval_LA.py Eval 'eval_scores_file.txt'
     
 
 EER values for the proposed model and the baseline models provided by ASVSpoof2019 organizers:
