@@ -152,7 +152,7 @@ if __name__ == '__main__':
 
     # Hyperparameters
     parser.add_argument('--batch_size', type=int, default=3)
-    parser.add_argument('--num_epochs', type=int, default=50)
+    parser.add_argument('--num_epochs', type=int, default=100)
     parser.add_argument('--lr', type=float, default=0.001)
     parser.add_argument('--weight_decay', type=float, default=0.001)
     parser.add_argument('--loss', type=str, default='WCE',help='Weighted Cross Entropy Loss ')
@@ -173,7 +173,7 @@ if __name__ == '__main__':
                         help='Path to save the evaluation result')
     parser.add_argument('--eval', action='store_true', default=False,
                         help='eval mode')
-    parser.add_argument('--is_eval', action='store_true', default=False,help='eval database')
+    parser.add_argument('--is_eval', action='store_true', default=False,help='eval database') #while training this is set as False, during evaluation it should be True
     parser.add_argument('--eval_part', type=int, default=0)
     parser.add_argument('--features', type=str, default='Raw_GAT')
 
