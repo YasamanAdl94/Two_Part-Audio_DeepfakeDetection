@@ -44,7 +44,7 @@ EER values for the proposed model and the baseline models provided by ASVSpoof20
 
 | Model                   | EER value   % | min-tDFC    |   
 | ------------------------|:-------------|:-------------|
-| ** Proposed Model - Fundamental_Dominant Frequency ** | **4.269**| **0.12712**  |
+| **Proposed Model - Fundamental_Dominant Frequency** | **4.269**| **0.12712**  |
 | GMM - LFCC features     |  3.50 |    0.0904|
 | LCNN - LFCC feature     |  5.06 |        0.1000|
 
