@@ -38,6 +38,10 @@ Other hyperpramater values such as epoch numbers, batch_size, learning rate and 
 
     python main.py --is_eval --eval --model_path='/path/to/your/best_model.pth' --eval_output='eval_scores_file.txt'
 
+### Computing EER value
+
+    python tDCF_python/evaluate_tDCF_asvspoof2019_eval_LA.py Eval 'eval_scores_file.txt'
+    
 
 EER values for the proposed model and the baseline models provided by ASVSpoof2019 organizers:
     https://arxiv.org/pdf/2102.05889.pdf
