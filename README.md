@@ -6,6 +6,8 @@ This repository contains the implementation for two-part architecture using fund
 
 ## Instructions
 
+I have used Pycharm IDE for this project and created a virtual environment with required packages. You have the option of creating a conda environment as Python interpreter instead if needed.  The python version I am using in my env is 3.7.9.
+
     $ conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia
     $ pip install -r requirements.txt
 
