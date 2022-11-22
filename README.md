@@ -55,5 +55,20 @@ EER values for the proposed model and the baseline models provided by ASVSpoof20
 
 # In progress
 
-CQCC is another promising audio feature computed by Constant Q transform which outlines the background structure of the audio files as an alternative to Fourier transform. Currently, I am working on CQCC feature along with spectral features such as mean and std of frequency, skew and spectral entropy. Spectral features are statistical analysis of the audio samples thus outlining the backbone structure of the audio. Background noise is related to spectral features of the audio so I believe I can do audio forensics analysis using these features
+CQCC is another promising audio feature computed by Constant Q transform which outlines the background structure of the audio files as an alternative to Fourier transform. Currently, I am working on CQCC feature along with spectral features such as mean and std of frequency, skew and spectral entropy. Spectral features are statistical analysis of the audio samples thus outlining the backbone structure of the audio. Background noise is related to spectral features of the audio so I believe I can do audio forensics analysis using these features.
+
+1. CQCC Features
+
+2. Computed from Constant Q transform used for time-frequency analysis of audio samples
+
+3. Spectral Features
+
+4. Background noise - Track 1 in ADD dataset
+
+5. Acoustic Scene
+
+6. Electric Network Frequency Signal
+
+7. GAT model ensemble with Bilevel optimization
+
 
