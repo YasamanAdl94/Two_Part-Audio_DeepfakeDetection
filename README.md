@@ -66,10 +66,12 @@ CQCC is another promising audio feature computed by Constant Q transform which o
 
 4. Background noise - Track 1 in ADD dataset
 
-5. Acoustic Scene
+5. Prosody Variations
+ 
+6. Acoustic Scene
 
-6. Electric Network Frequency Signal
+7. Electric Network Frequency Signal
 
-7. GAT model ensemble with Bilevel optimization
+8. GAT model ensemble with Bilevel optimization
 
 
