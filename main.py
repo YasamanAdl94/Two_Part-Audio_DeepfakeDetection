@@ -1,3 +1,4 @@
+#imports
 import argparse
 import sys
 import os
@@ -6,7 +7,7 @@ import numpy as np
 from torch import Tensor
 from torch.utils.data import DataLoader
 from torchvision import transforms
-import yaml
+import yaml #config
 import torch
 from torch import nn
 import librosa
