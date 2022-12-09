@@ -11,6 +11,8 @@ from torch.nn.parameter import Parameter
 from torch.autograd import Variable
 import random
 
+#-----------GAT Model-----------
+
 
 class GraphAttentionLayer(nn.Module):
     def __init__(self, in_dim, out_dim, **kwargs):
@@ -101,6 +103,7 @@ class GraphAttentionLayer(nn.Module):
 
 
 
+#pooling layer
 
 class Pool(nn.Module):
 
